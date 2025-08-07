@@ -7,11 +7,17 @@ import com.acs.Test.dto.SupplierResponse;
 import com.acs.Test.pojo.Supplier;
 import com.acs.Test.pojo.SupplierAddress;
 import com.acs.Test.pojo.SupplierContact;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class SupplierMapper {
+
+    public SupplierMapper() {
+    }
+
     public SupplierResponse toResponse(Supplier supplier, Integer productCount, List<String> skus, List<FcResponse> fcResponses){
         return new SupplierResponse(
                 supplier.getId(),
@@ -43,8 +49,8 @@ public class SupplierMapper {
                 address.getState(),
                 address.getCountry(),
                 address.getZipCode(),
-                address.getIsDefault(),
-                address.getIsCopiedFromPrimary()
+                address.getDefault(),
+                address.getCopiedFromPrimary()
         );
     }
 
@@ -53,7 +59,7 @@ public class SupplierMapper {
                 contact.getName(),
                 contact.getEmail(),
                 contact.getPhone(),
-                contact.getIsPrimary()
+                contact.getPrimary()
         );
     }
 }

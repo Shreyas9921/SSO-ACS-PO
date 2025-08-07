@@ -14,13 +14,17 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(transactionManager = "poTransactionManager") // Use PO transaction manager
 public class SupplierServiceImpl implements SupplierService {
 
 
     private final SupplierRepository supplierRepository;
     private final SupplierMapper supplierMapper;
+
+    public SupplierServiceImpl(SupplierRepository supplierRepository, SupplierMapper supplierMapper) {
+        this.supplierRepository = supplierRepository;
+        this.supplierMapper = supplierMapper;
+    }
 
     @Override
     public SupplierResponse getSupplierById(Integer id) {

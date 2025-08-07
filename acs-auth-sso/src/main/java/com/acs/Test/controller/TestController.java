@@ -1,5 +1,6 @@
 package com.acs.Test.controller;
 
+import com.acs.Test.dto.TestLombok;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -34,6 +35,8 @@ public class TestController {
         return ResponseEntity.ok(userInfo);
     }
 
-    
+//    TestLombok obj = new TestLombok();
+//    obj.setName("Hello");
+//    System.out.println(obj.getName());
 
 }

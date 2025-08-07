@@ -117,11 +117,23 @@
 			<artifactId>acs-common</artifactId>
 			<version>0.0.124-SNAPSHOT</version>
 		</dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-        </dependency>
-    </dependencies>
+        </dependency>-->
+		<!-- Lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.32</version>
+			<optional>true</optional>
+			<!--<scope>Provided</scope>-->
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+	</dependencies>
 
 	<repositories>
 		<!--Your custom maven repo -->

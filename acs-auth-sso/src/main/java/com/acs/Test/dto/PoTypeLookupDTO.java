@@ -10,5 +10,4 @@ public class PoTypeLookupDTO {
         this.poType = poType;
     }
 
-
 }

@@ -19,9 +19,6 @@ import java.util.Set;
         @UniqueConstraint(columnNames = {"client_id", "supplier_name"}),
         @UniqueConstraint(columnNames = {"client_id", "supplier_code"})
 })
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -49,13 +46,19 @@ public class Supplier {
     private String supplierCode;
 
     // private String status = SUPPLIER_STATUS_ACTIVE;
+    @Column(name = "status")
     private String status = "Active";
 
     @CreationTimestamp
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "integration_received")
+    private boolean integrationReceived;
 
     @ToString.Exclude                // ← prevents recursive toString
     @EqualsAndHashCode.Exclude       // ← prevents recursive equals/hashCode
@@ -70,50 +73,89 @@ public class Supplier {
     private Set<SupplierContact> contacts;
     //private Set<SupplierContact> contacts = new HashSet<>();
 
-    @ToString.Exclude                // ← prevents recursive toString
-    @EqualsAndHashCode.Exclude       // ← prevents recursive equals/hashCode
+//    @ToString.Exclude                // ← prevents recursive toString
+//    @EqualsAndHashCode.Exclude       // ← prevents recursive equals/hashCode
 
 //    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private Set<SupplierProductMapping> supplierProductMappings;
 
+    public Integer getId() {
+        return id;
+    }
 
-    /*@Transient
-    @JsonIgnore
-    @Getter @Setter
-    private String originalState;*/
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
+    public Client getClient() {
+        return client;
+    }
 
-    @Column(name = "integration_received")
-    private boolean integrationReceived;
+    public void setClient(Client client) {
+        this.client = client;
+    }
 
+    public String getSupplierName() {
+        return supplierName;
+    }
 
-    /*@Transient
-    @JsonIgnore
-    private static final ObjectMapper mapper = new ObjectMapper();*/
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
+    }
 
-    /*@PostLoad
-    private void cacheOriginalState() {
-        try {
-            this.originalState = mapper.writeValueAsString(this);
-        } catch (Exception e) {
-            this.originalState = null;
-        }
-    }*/
+    public String getSupplierCode() {
+        return supplierCode;
+    }
 
-    /*public Supplier(Supplier other) {
-        this.id = other.id;
-        this.client = other.client; // If you want a deep copy, clone client as well
-        this.supplierName = other.supplierName;
-        this.supplierCode = other.supplierCode;
-        this.status = other.status;
-        this.createdAt = other.createdAt;
-        this.updatedAt = other.updatedAt;
+    public void setSupplierCode(String supplierCode) {
+        this.supplierCode = supplierCode;
+    }
 
-        // Shallow copy of addresses, contacts, and supplierProductMappings
-        this.addresses = (other.addresses != null) ? new HashSet<>(other.addresses) : null;
-        this.contacts = (other.contacts != null) ? new HashSet<>(other.contacts) : null;
-        this.supplierProductMappings = (other.supplierProductMappings != null) ? new HashSet<>(other.supplierProductMappings) : null;
+    public String getStatus() {
+        return status;
+    }
 
-        this.originalState = other.originalState;
-    }*/
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Set<SupplierAddress> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(Set<SupplierAddress> addresses) {
+        this.addresses = addresses;
+    }
+
+    public Set<SupplierContact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(Set<SupplierContact> contacts) {
+        this.contacts = contacts;
+    }
+
+    public boolean isIntegrationReceived() {
+        return integrationReceived;
+    }
+
+    public void setIntegrationReceived(boolean integrationReceived) {
+        this.integrationReceived = integrationReceived;
+    }
 }

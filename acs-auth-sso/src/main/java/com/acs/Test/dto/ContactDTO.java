@@ -1,17 +1,13 @@
 package com.acs.Test.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Data
-@RequiredArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ContactDTO {
     @NotBlank
@@ -22,4 +18,11 @@ public class ContactDTO {
     private String email;
     private String phone;
     private Boolean isPrimary;
+
+    public ContactDTO(String name, String email, String phone, Boolean isPrimary) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.isPrimary = isPrimary;
+    }
 }
