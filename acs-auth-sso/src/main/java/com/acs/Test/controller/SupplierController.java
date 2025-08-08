@@ -6,6 +6,7 @@ import com.acs.common.annotation.Authenticated;
 import com.acs.common.dto.UsersAuthDto;
 import com.acs.common.enums.DeviceType;
 import com.acs.common.utils.Constant;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -34,6 +35,11 @@ public class SupplierController {
         // return ResponseEntity.ok(ApiResponse.ok(singleRecordById, "Individual supplier record"));
 
         ApiResponse<SupplierResponse> response = ApiResponse.ok(singleRecordById, "Fetched supplier successfully");
+
+        if (response == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("Supplier not found"));
+        }
 
         return ResponseEntity.ok(response);
     }

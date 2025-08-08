@@ -42,8 +42,9 @@ public class PoJpaConfig {
     @Bean(name = "poEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean poEntityManagerFactory*/
 
-    //@Primary
-    @Bean(name = "poEntityManagerFactory")
+    @Primary
+    // @Bean(name = "poEntityManagerFactory")
+    @Bean(name = "entityManagerFactory")
     @DependsOn("poDataSource")
     public LocalContainerEntityManagerFactoryBean poEntityManagerFactory(
             @Qualifier("poDataSource") DataSource dataSource) {
@@ -78,12 +79,14 @@ public class PoJpaConfig {
     @Bean(name = "poTransactionManager")
     public PlatformTransactionManager poTransactionManager*/
 
-    //@Primary
-    @Bean(name = "poTransactionManager")
-    @DependsOn("poEntityManagerFactory")
+    @Primary
+    // @Bean(name = "poTransactionManager")
+    // @DependsOn("poEntityManagerFactory")
+    @Bean(name = "transactionManager")
+    @DependsOn("entityManagerFactory")
     //@DependsOn("poDataSource")
     public PlatformTransactionManager poTransactionManager(
-            @Qualifier("poEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+            /*@Qualifier("poEntityManagerFactory")*/ @Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }
 }

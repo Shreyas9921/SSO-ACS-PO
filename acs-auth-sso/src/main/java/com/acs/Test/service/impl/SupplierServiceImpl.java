@@ -14,9 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional(transactionManager = "poTransactionManager") // Use PO transaction manager
+//@Transactional(transactionManager = "poTransactionManager") // Use PO transaction manager
+@Transactional
 public class SupplierServiceImpl implements SupplierService {
-
 
     private final SupplierRepository supplierRepository;
     private final SupplierMapper supplierMapper;
