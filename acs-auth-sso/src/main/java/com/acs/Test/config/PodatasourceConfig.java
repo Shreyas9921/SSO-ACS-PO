@@ -13,14 +13,14 @@ import javax.sql.DataSource;
 @Configuration
 public class PodatasourceConfig {
 
-    //@Primary
+    @Primary
     @Bean
     @ConfigurationProperties("spring.datasource.po")
     public DataSourceProperties poMySqlProperties() {
         return new DataSourceProperties();
     }
 
-    //@Primary
+    @Primary
     @Bean(name = "poDataSource")
     // @ConfigurationProperties(prefix = "spring.datasource.po")
     public DataSource poDataSource() {

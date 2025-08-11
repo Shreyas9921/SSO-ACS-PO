@@ -62,14 +62,13 @@ public class Supplier {
 
     @ToString.Exclude                // ← prevents recursive toString
     @EqualsAndHashCode.Exclude       // ← prevents recursive equals/hashCode
-    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<SupplierAddress> addresses;
     //private Set<SupplierAddress> addresses = new HashSet<>();
 
     @ToString.Exclude                // ← prevents recursive toString
     @EqualsAndHashCode.Exclude       // ← prevents recursive equals/hashCode
-
-    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<SupplierContact> contacts;
     //private Set<SupplierContact> contacts = new HashSet<>();
 

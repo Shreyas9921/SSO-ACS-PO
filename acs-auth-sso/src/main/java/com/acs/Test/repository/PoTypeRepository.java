@@ -13,13 +13,12 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-/*
 @Repository
-@Transactional(transactionManager = "poTransactionManager")
+@Transactional/*(transactionManager = "poTransactionManager")*/
 public interface PoTypeRepository extends JpaRepository<PoType, Integer> {
 }
-*/
 
+/*
 @Repository
 @Transactional(transactionManager = "poTransactionManager") // Use PO transaction manager
 public class PoTypeRepository {
@@ -40,6 +39,7 @@ public class PoTypeRepository {
         return poEntityManager.merge(poType); // transaction handled by Spring
     }
 }
+*/
 
 /*
 public class PoTypeRepository {
