@@ -25,7 +25,8 @@ public class SupplierController {
     public  SupplierController(SupplierService supplierService) { this.supplierService = supplierService; }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse<SupplierResponse>> getOne(
+//    public ResponseEntity<ApiResponse<SupplierResponse>> getOne(
+    public ResponseEntity<SupplierResponse> getOne(
             @Authenticated(required = true) UsersAuthDto user,
             @RequestHeader(name = Constant.AUTH_TOKEN) String authToken,
             @RequestHeader(name = Constant.DEVICE_TYPE) DeviceType deviceType,
@@ -34,13 +35,15 @@ public class SupplierController {
         SupplierResponse singleRecordById = supplierService.getSupplierById(id);
         // return ResponseEntity.ok(ApiResponse.ok(singleRecordById, "Individual supplier record"));
 
-        ApiResponse<SupplierResponse> response = ApiResponse.ok(singleRecordById, "Fetched supplier successfully");
+        // ApiResponse<SupplierResponse> response = ApiResponse.ok(singleRecordById, "Fetched supplier successfully");
+        System.out.println("Supplier response : " + singleRecordById.toString());
 
-        if (response == null) {
+        /*if (response == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(ApiResponse.error("Supplier not found"));
-        }
+        }*/
 
-        return ResponseEntity.ok(response);
+        // return ResponseEntity.ok(response);
+        return ResponseEntity.ok(singleRecordById);
     }
 }

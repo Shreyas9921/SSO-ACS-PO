@@ -44,10 +44,10 @@ public class PoTypeController {
 //            tags = {"PO Management"})
     @GetMapping
     public ResponseEntity<List<PoTypeLookupDTO>> getPoTypes(
-            /*@Authenticated(required = true) UsersAuthDto user,
+            @Authenticated(required = true) UsersAuthDto user,
             @RequestHeader(name = Constant.AUTH_TOKEN) String authToken,
             @RequestHeader(name = Constant.DEVICE_TYPE) DeviceType deviceType,
-            @RequestHeader(name = Constant.APP_VERSION) String appVersion*/) {
+            @RequestHeader(name = Constant.APP_VERSION) String appVersion) {
         List<PoTypeLookupDTO> types = poTypeRepository.findAll().stream()
                 .map(t -> new PoTypeLookupDTO(t.getId(), t.getPoType()))
                 .collect(Collectors.toList());

@@ -3,8 +3,8 @@ package com.acs.Test.controller;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
-@Getter
+//@Setter
+//@Getter
 public class ApiResponse<T> {
     private boolean success;
     private String message;
@@ -67,4 +67,6 @@ public class ApiResponse<T> {
     public void setData(T data) {
         this.data = data;
     }
+
+
 }
