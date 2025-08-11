@@ -3,6 +3,7 @@ package com.acs.Test.repository;
 import com.acs.Test.pojo.PoType;
 import com.acs.Test.pojo.Supplier;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 @Repository
 @Transactional/*(transactionManager = "poTransactionManager")*/
-public interface SupplierRepository extends JpaRepository<Supplier, Integer> {
+public interface SupplierRepository extends JpaRepository<Supplier, Integer>, JpaSpecificationExecutor<Supplier> {
 }
 
 /*
