@@ -10,4 +10,6 @@ public interface SupplierService {
     SupplierResponse getSupplierById(Integer id);
 
     Page<SupplierResponse> searchSuppliers(SupplierSearchRequest filters, int page, int size, String sortField);
+
+    List<SupplierResponse> getAllSuppliers();
 }

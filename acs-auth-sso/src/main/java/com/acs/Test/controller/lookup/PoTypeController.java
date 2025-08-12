@@ -1,12 +1,11 @@
-package com.acs.Test.controller;
+package com.acs.Test.controller.lookup;
 
-import com.acs.Test.dto.PoTypeLookupDTO;
+import com.acs.Test.dto.lookup.PoTypeLookupDTO;
 import com.acs.Test.repository.PoTypeRepository;
 import com.acs.common.annotation.Authenticated;
 import com.acs.common.dto.UsersAuthDto;
 import com.acs.common.enums.DeviceType;
 import com.acs.common.utils.Constant;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;

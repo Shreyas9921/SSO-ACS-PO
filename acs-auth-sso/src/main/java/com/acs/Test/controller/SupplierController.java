@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/suppliers")
 @Validated
@@ -24,6 +26,9 @@ public class SupplierController {
 
     public  SupplierController(SupplierService supplierService) { this.supplierService = supplierService; }
 
+    /*
+     * Get data by id endpoint
+     * */
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 //    public ResponseEntity<ApiResponse<SupplierResponse>> getOne(
     public ResponseEntity<SupplierResponse> getOne(
@@ -45,5 +50,18 @@ public class SupplierController {
 
         // return ResponseEntity.ok(response);
         return ResponseEntity.ok(singleRecordById);
+    }
+
+    /*
+     * Get all suppliers list endpoint
+     * */
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<ApiResponse<List<SupplierResponse>>> getAll() {
+    public ResponseEntity<List<SupplierResponse>> getAll() {
+            // return ResponseEntity.ok(supplierService.getAllSuppliers());
+        List<SupplierResponse> listAll = supplierService.getAllSuppliers();
+
+//        return ResponseEntity.ok(ApiResponse.ok(listAll, "All suppliers list"));
+        return ResponseEntity.ok(listAll);
     }
 }
