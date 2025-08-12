@@ -1,9 +1,9 @@
 package com.acs.Test.controller;
 
 import com.acs.Test.dto.PageResult;
-import com.acs.Test.dto.SupplierResponse;
-import com.acs.Test.dto.supplier.SupplierSearchPageRequest;
-import com.acs.Test.dto.supplier.SupplierSearchRequest;
+import com.acs.Test.dto.response.supplier.SupplierResponse;
+import com.acs.Test.dto.request.supplier.SupplierSearchPageRequest;
+import com.acs.Test.dto.request.supplier.SupplierSearchRequest;
 import com.acs.Test.service.SupplierService;
 import com.acs.common.annotation.Authenticated;
 import com.acs.common.dto.UsersAuthDto;

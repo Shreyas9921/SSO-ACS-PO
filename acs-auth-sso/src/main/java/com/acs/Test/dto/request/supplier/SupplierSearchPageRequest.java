@@ -1,4 +1,4 @@
-package com.acs.Test.dto.supplier;
+package com.acs.Test.dto.request.supplier;
 
 import org.springframework.lang.Nullable;
 

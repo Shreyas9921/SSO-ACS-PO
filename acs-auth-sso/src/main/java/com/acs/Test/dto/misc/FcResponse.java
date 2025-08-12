@@ -1,6 +1,4 @@
-package com.acs.Test.dto;
-
-import lombok.*;
+package com.acs.Test.dto.misc;
 
 /*@Data
 @NoArgsConstructor

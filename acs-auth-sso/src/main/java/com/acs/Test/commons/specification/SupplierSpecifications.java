@@ -1,6 +1,6 @@
 package com.acs.Test.commons.specification;
 
-import com.acs.Test.dto.supplier.SupplierSearchRequest;
+import com.acs.Test.dto.request.supplier.SupplierSearchRequest;
 import com.acs.Test.pojo.Supplier;
 import com.acs.Test.pojo.SupplierAddress;
 import com.acs.Test.pojo.SupplierContact;

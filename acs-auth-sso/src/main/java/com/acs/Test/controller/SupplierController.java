@@ -1,12 +1,11 @@
 package com.acs.Test.controller;
 
-import com.acs.Test.dto.SupplierResponse;
+import com.acs.Test.dto.response.supplier.SupplierResponse;
 import com.acs.Test.service.SupplierService;
 import com.acs.common.annotation.Authenticated;
 import com.acs.common.dto.UsersAuthDto;
 import com.acs.common.enums.DeviceType;
 import com.acs.common.utils.Constant;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

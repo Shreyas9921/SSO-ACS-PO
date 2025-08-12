@@ -1,8 +1,5 @@
-package com.acs.Test.dto.supplier;
+package com.acs.Test.dto.request.supplier;
 
-import lombok.Builder;
-import lombok.extern.jackson.Jacksonized;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 
 import java.util.Collections;

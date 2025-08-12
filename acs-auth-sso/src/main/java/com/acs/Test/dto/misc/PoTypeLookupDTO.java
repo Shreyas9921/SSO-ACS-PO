@@ -1,4 +1,4 @@
-package com.acs.Test.dto;
+package com.acs.Test.dto.misc;
 
 public class PoTypeLookupDTO {
 
