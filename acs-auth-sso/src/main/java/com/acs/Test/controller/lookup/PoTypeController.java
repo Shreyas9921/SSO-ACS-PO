@@ -1,6 +1,6 @@
-package com.acs.Test.controller;
+package com.acs.Test.controller.lookup;
 
-import com.acs.Test.dto.misc.PoTypeLookupDTO;
+import com.acs.Test.dto.lookup.PoTypeLookupDTO;
 import com.acs.Test.repository.PoTypeRepository;
 import com.acs.common.annotation.Authenticated;
 import com.acs.common.dto.UsersAuthDto;

@@ -59,6 +59,25 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
+    public List<SupplierResponse> getAllSuppliers() {
+        return supplierRepository.findAll().stream()
+                .map(supplier -> {
+                    Integer productCount = supplierProductMappingRepository.countBySupplierId(Long.valueOf(supplier.getId()));
+                    List<String> skus = supplierProductMappingRepository.findProductsBySupplierId(supplier.getId());
+
+                    List<SupplierFcMappings> fcMappings = supplierFcMappingRepository.findBySupplierId(supplier.getId());
+                    List<FcResponse> fcResponses = fcMappings.stream()
+                            .filter(SupplierFcMappings::getStatus) // Only active ones
+                            .map(mapping -> supplierMapper.toFcResponse(mapping.getFulfilmentCenter()))
+                            .toList();
+
+                    return supplierMapper.toResponse(supplier, productCount, skus, fcResponses);
+                })
+                .toList();
+    }
+
+
+    @Override
     public Page<SupplierResponse> searchSuppliers(SupplierSearchRequest filters,
                                                   int page,
                                                   int size,
