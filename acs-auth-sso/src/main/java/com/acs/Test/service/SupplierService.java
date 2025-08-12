@@ -1,10 +1,8 @@
 package com.acs.Test.service;
 
-import com.acs.Test.dto.SupplierResponse;
-import com.acs.Test.dto.supplier.SupplierSearchRequest;
+import com.acs.Test.dto.response.supplier.SupplierResponse;
+import com.acs.Test.dto.request.supplier.SupplierSearchRequest;
 import org.springframework.data.domain.Page;
-
-import java.util.List;
 
 public interface SupplierService {
     SupplierResponse getSupplierById(Integer id);

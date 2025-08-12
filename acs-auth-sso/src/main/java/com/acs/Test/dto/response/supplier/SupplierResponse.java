@@ -1,7 +1,9 @@
-package com.acs.Test.dto;
+package com.acs.Test.dto.response.supplier;
 
 
-import lombok.*;
+import com.acs.Test.dto.misc.AddressDTO;
+import com.acs.Test.dto.misc.ContactDTO;
+import com.acs.Test.dto.misc.FcResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;

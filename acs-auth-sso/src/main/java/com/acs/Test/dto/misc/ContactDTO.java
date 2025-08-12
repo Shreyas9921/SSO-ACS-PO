@@ -1,6 +1,4 @@
-package com.acs.Test.dto;
-
-import lombok.*;
+package com.acs.Test.dto.misc;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

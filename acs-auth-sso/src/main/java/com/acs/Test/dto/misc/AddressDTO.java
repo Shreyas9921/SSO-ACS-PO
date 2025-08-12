@@ -1,8 +1,6 @@
-package com.acs.Test.dto;
+package com.acs.Test.dto.misc;
 
 import javax.validation.constraints.NotBlank;
-
-import lombok.*;
 
 /*@Data
 @NoArgsConstructor

@@ -2,14 +2,13 @@ package com.acs.Test.service.impl;
 
 import com.acs.Test.commons.mapper.SupplierMapper;
 import com.acs.Test.commons.specification.SupplierSpecifications;
-import com.acs.Test.dto.FcResponse;
-import com.acs.Test.dto.SupplierResponse;
-import com.acs.Test.dto.supplier.SupplierSearchRequest;
+import com.acs.Test.dto.misc.FcResponse;
+import com.acs.Test.dto.response.supplier.SupplierResponse;
+import com.acs.Test.dto.request.supplier.SupplierSearchRequest;
 import com.acs.Test.exception.ResourceNotFoundException;
 import com.acs.Test.pojo.Supplier;
 import com.acs.Test.repository.SupplierRepository;
 import com.acs.Test.service.SupplierService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

@@ -1,9 +1,9 @@
 package com.acs.Test.commons.mapper;
 
-import com.acs.Test.dto.AddressDTO;
-import com.acs.Test.dto.ContactDTO;
-import com.acs.Test.dto.FcResponse;
-import com.acs.Test.dto.SupplierResponse;
+import com.acs.Test.dto.misc.AddressDTO;
+import com.acs.Test.dto.misc.ContactDTO;
+import com.acs.Test.dto.misc.FcResponse;
+import com.acs.Test.dto.response.supplier.SupplierResponse;
 import com.acs.Test.pojo.Supplier;
 import com.acs.Test.pojo.SupplierAddress;
 import com.acs.Test.pojo.SupplierContact;
