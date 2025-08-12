@@ -6,6 +6,7 @@ import com.acs.common.annotation.Authenticated;
 import com.acs.common.dto.UsersAuthDto;
 import com.acs.common.enums.DeviceType;
 import com.acs.common.utils.Constant;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -29,10 +30,10 @@ public class SupplierController {
      * Get data by id endpoint
      * */
 //    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<ApiResponse<SupplierResponse>> getOne(
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SupplierResponse> getOne(
-            @Authenticated(required = true) UsersAuthDto user,
+//    public ResponseEntity<SupplierResponse> getOne(
+    public ResponseEntity<ApiResponse<SupplierResponse>> getOne(
+        @Authenticated(required = true) UsersAuthDto user,
             @RequestHeader(name = Constant.AUTH_TOKEN) String authToken,
             @RequestHeader(name = Constant.DEVICE_TYPE) DeviceType deviceType,
             @RequestHeader(name = Constant.APP_VERSION) String appVersion,
@@ -40,7 +41,7 @@ public class SupplierController {
         SupplierResponse singleRecordById = supplierService.getSupplierById(id);
         // return ResponseEntity.ok(ApiResponse.ok(singleRecordById, "Individual supplier record"));
 
-        // ApiResponse<SupplierResponse> response = ApiResponse.ok(singleRecordById, "Fetched supplier successfully");
+        return ResponseEntity.ok(new ApiResponse<>(true, "Fetched supplier successfully", singleRecordById));
         // System.out.println("Supplier response : " + singleRecordById.toString());
 
         /*if (response == null) {
@@ -48,8 +49,8 @@ public class SupplierController {
                     .body(ApiResponse.error("Supplier not found"));
         }*/
 
-        // return ResponseEntity.ok(response);
-        return ResponseEntity.ok(singleRecordById);
+//        return ResponseEntity.ok(response);
+//        return ResponseEntity.ok(singleRecordById);
     }
 
     /*
