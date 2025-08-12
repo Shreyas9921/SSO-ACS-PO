@@ -4,6 +4,7 @@ import com.acs.Test.dto.misc.AddressDTO;
 import com.acs.Test.dto.misc.ContactDTO;
 import com.acs.Test.dto.misc.FcResponse;
 import com.acs.Test.dto.response.supplier.SupplierResponse;
+import com.acs.Test.pojo.FulfilmentCenter;
 import com.acs.Test.pojo.Supplier;
 import com.acs.Test.pojo.SupplierAddress;
 import com.acs.Test.pojo.SupplierContact;
@@ -62,4 +63,12 @@ public class SupplierMapper {
                 contact.getPrimary()
         );
     }
+
+    public FcResponse toFcResponse(FulfilmentCenter fc) {
+        return new FcResponse(
+                fc.getId(),
+                fc.getFcName()
+        );
+    }
+
 }

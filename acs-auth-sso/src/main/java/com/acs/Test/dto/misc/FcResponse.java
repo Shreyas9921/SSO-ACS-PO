@@ -8,9 +8,9 @@ public class FcResponse {
     private Integer fcId;
     private String fcName;
 
-    public FcResponse(String fcName, Integer fcId) {
-        this.fcName = fcName;
+    public FcResponse(Integer fcId, String fcName) {
         this.fcId = fcId;
+        this.fcName = fcName;
     }
 
     public Integer getFcId() {

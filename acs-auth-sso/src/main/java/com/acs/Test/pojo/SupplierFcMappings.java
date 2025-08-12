@@ -34,12 +34,13 @@ public class SupplierFcMappings {
     @JoinColumn(name = "fc_id", nullable = false)
     private FulfilmentCenter fulfilmentCenter;
 
-    @Column(nullable = false)
+    @Column(name = "status", nullable = false)
     private Boolean status = true;
 
-    @Column(updatable = false)
+    @Column(name = "created_at", updatable = false)
     private Timestamp createdAt;
 
+    @Column(name = "updated_at")
     private Timestamp updatedAt;
 
     @PrePersist

@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Repository
-@Transactional(transactionManager = "authTransactionManager")
+@Transactional(transactionManager = "transactionManager")
 public interface UsersRepository extends JpaRepository<Users, Long> {
 
     Page<Users> findAll(Specification<?> build, Pageable pageable);

@@ -44,7 +44,7 @@ import com.acs.Test.enums.Status;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(transactionManager = "authTransactionManager") // Use Auth transaction manager
+// @Transactional(transactionManager = "authTransactionManager") // Use Auth transaction manager
 public class UserServiceImpl implements UserService {
 
 	private static final Logger LOG = Logger.getLogger(UserServiceImpl.class);

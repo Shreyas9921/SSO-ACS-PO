@@ -7,6 +7,9 @@ import com.acs.Test.dto.response.supplier.SupplierResponse;
 import com.acs.Test.dto.request.supplier.SupplierSearchRequest;
 import com.acs.Test.exception.ResourceNotFoundException;
 import com.acs.Test.pojo.Supplier;
+import com.acs.Test.pojo.SupplierFcMappings;
+import com.acs.Test.repository.SupplierFcMappingRepository;
+import com.acs.Test.repository.SupplierProductMappingRepository;
 import com.acs.Test.repository.SupplierRepository;
 import com.acs.Test.service.SupplierService;
 import org.springframework.data.domain.Page;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 //@Transactional(transactionManager = "poTransactionManager") // Use PO transaction manager
@@ -27,13 +31,19 @@ public class SupplierServiceImpl implements SupplierService {
     private final SupplierRepository supplierRepository;
     private final SupplierMapper supplierMapper;
 
-//    private final SupplierProductMappingRepository supplierProductMappingRepository;
-//    private final SupplierFcMappingRepository supplierFcMappingRepository;
+    private final SupplierProductMappingRepository supplierProductMappingRepository;
+    private final SupplierFcMappingRepository supplierFcMappingRepository;
 
 
-    public SupplierServiceImpl(SupplierRepository supplierRepository, SupplierMapper supplierMapper) {
+    public SupplierServiceImpl(SupplierRepository supplierRepository,
+                               SupplierMapper supplierMapper,
+                               SupplierProductMappingRepository supplierProductMappingRepository,
+                               SupplierFcMappingRepository supplierFcMappingRepository)
+    {
         this.supplierRepository = supplierRepository;
         this.supplierMapper = supplierMapper;
+        this.supplierProductMappingRepository = supplierProductMappingRepository;
+        this.supplierFcMappingRepository = supplierFcMappingRepository;
     }
 
     @Override
@@ -42,18 +52,19 @@ public class SupplierServiceImpl implements SupplierService {
                 .orElseThrow(() -> new ResourceNotFoundException("Supplier not found"));
 
 //        Integer productCount = supplierProductMappingRepository.countBySupplierId(Long.valueOf(supplier.getId()));
-//        List<String> skus = supplierProductMappingRepository.findProductsBySupplierId(supplier.getId());
-        Integer productCount = 0;
-        List<String> skus = List.of();
+        Integer productCount = supplierProductMappingRepository.countBySupplierId(supplier.getId());
+        List<String> skus = supplierProductMappingRepository.findProductsBySupplierId(supplier.getId());
+//        Integer productCount = 0;
+//        List<String> skus = List.of();
 
-        // List<SupplierFcMappings> fcMappings = supplierFcMappingRepository.findBySupplierId(supplier.getId());
-        List<String> fcMappings = List.of();
+        List<SupplierFcMappings> fcMappings = supplierFcMappingRepository.findBySupplierId(supplier.getId());
+//        List<String> fcMappings = List.of();
 
-        /*List<FcResponse> fcResponses = fcMappings.stream()
+        List<FcResponse> fcResponses = fcMappings.stream()
                 .filter(SupplierFcMappings::getStatus)
                 .map(mapping -> supplierMapper.toFcResponse(mapping.getFulfilmentCenter()))
-                .toList();*/
-        List<FcResponse> fcResponses = List.of();
+                .collect(Collectors.toList());
+//        List<FcResponse> fcResponses = List.of();
 
         return supplierMapper.toResponse(supplier, productCount, skus, fcResponses);
     }
@@ -62,18 +73,19 @@ public class SupplierServiceImpl implements SupplierService {
     public List<SupplierResponse> getAllSuppliers() {
         return supplierRepository.findAll().stream()
                 .map(supplier -> {
-                    Integer productCount = supplierProductMappingRepository.countBySupplierId(Long.valueOf(supplier.getId()));
+//                    Integer productCount = supplierProductMappingRepository.countBySupplierId(Long.valueOf(supplier.getId()));
+                    Integer productCount = supplierProductMappingRepository.countBySupplierId(supplier.getId());
                     List<String> skus = supplierProductMappingRepository.findProductsBySupplierId(supplier.getId());
 
                     List<SupplierFcMappings> fcMappings = supplierFcMappingRepository.findBySupplierId(supplier.getId());
                     List<FcResponse> fcResponses = fcMappings.stream()
                             .filter(SupplierFcMappings::getStatus) // Only active ones
                             .map(mapping -> supplierMapper.toFcResponse(mapping.getFulfilmentCenter()))
-                            .toList();
+                            .collect(Collectors.toList());
 
                     return supplierMapper.toResponse(supplier, productCount, skus, fcResponses);
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 
 
@@ -98,21 +110,21 @@ public class SupplierServiceImpl implements SupplierService {
             Integer supplierId = supplier.getId();
 
 //            Integer productCount = supplierProductMappingRepository.countBySupplierId(Long.valueOf(supplierId));
-//            List<String> skus = supplierProductMappingRepository.findProductsBySupplierId(Math.toIntExact(Long.valueOf(supplierId)));
-            Integer productCount = 0;
-            List<String> skus = List.of();
+            Integer productCount = supplierProductMappingRepository.countBySupplierId(supplier.getId());
+            List<String> skus = supplierProductMappingRepository.findProductsBySupplierId(Math.toIntExact(Long.valueOf(supplierId)));
+//            Integer productCount = 0;
+//            List<String> skus = List.of();
 
-//            List<SupplierFcMappings> fcMappings = supplierFcMappingRepository.findBySupplierId(supplierId);
-            List<String> fcMappings = List.of();
+            List<SupplierFcMappings> fcMappings = supplierFcMappingRepository.findBySupplierId(supplierId);
+//            List<String> fcMappings = List.of();
 
-            /*List<FcResponse> fcResponses = fcMappings.stream()
+            List<FcResponse> fcResponses = fcMappings.stream()
                     .map(mapping -> new FcResponse(
                             mapping.getFulfilmentCenter().getId(),     // Adjust if different
                             mapping.getFulfilmentCenter().getFcName()    // Adjust if different
                     ))
-                    .toList();*/
-            List<FcResponse> fcResponses = List.of();
-
+                    .collect(Collectors.toList());
+//            List<FcResponse> fcResponses = List.of();
 
             return supplierMapper.toResponse(supplier, productCount, skus, fcResponses);
         });

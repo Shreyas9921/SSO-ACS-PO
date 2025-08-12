@@ -2,10 +2,12 @@ package com.acs.Test.controller.lookup;
 
 import com.acs.Test.dto.lookup.PoTypeLookupDTO;
 import com.acs.Test.repository.PoTypeRepository;
+import com.acs.Test.controller.ApiResponse;
 import com.acs.common.annotation.Authenticated;
 import com.acs.common.dto.UsersAuthDto;
 import com.acs.common.enums.DeviceType;
 import com.acs.common.utils.Constant;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -42,6 +44,7 @@ public class PoTypeController {
 //            description = "Returns all PO types for Create PO dropdown",
 //            tags = {"PO Management"})
     @GetMapping
+    //    public ResponseEntity<ApiResponse<List<PoTypeLookupDTO>>> getPoTypes(
     public ResponseEntity<List<PoTypeLookupDTO>> getPoTypes(
             @Authenticated(required = true) UsersAuthDto user,
             @RequestHeader(name = Constant.AUTH_TOKEN) String authToken,
@@ -52,5 +55,6 @@ public class PoTypeController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(types);
+//        return ResponseEntity.ok(ApiResponse.ok(types));
     }
 }

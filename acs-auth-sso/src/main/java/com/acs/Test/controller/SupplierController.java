@@ -28,8 +28,9 @@ public class SupplierController {
     /*
      * Get data by id endpoint
      * */
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 //    public ResponseEntity<ApiResponse<SupplierResponse>> getOne(
+    @GetMapping(value = "/{id}")
     public ResponseEntity<SupplierResponse> getOne(
             @Authenticated(required = true) UsersAuthDto user,
             @RequestHeader(name = Constant.AUTH_TOKEN) String authToken,
@@ -40,7 +41,7 @@ public class SupplierController {
         // return ResponseEntity.ok(ApiResponse.ok(singleRecordById, "Individual supplier record"));
 
         // ApiResponse<SupplierResponse> response = ApiResponse.ok(singleRecordById, "Fetched supplier successfully");
-        System.out.println("Supplier response : " + singleRecordById.toString());
+        // System.out.println("Supplier response : " + singleRecordById.toString());
 
         /*if (response == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -54,8 +55,9 @@ public class SupplierController {
     /*
      * Get all suppliers list endpoint
      * */
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+//    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 //    public ResponseEntity<ApiResponse<List<SupplierResponse>>> getAll() {
+    @GetMapping
     public ResponseEntity<List<SupplierResponse>> getAll() {
             // return ResponseEntity.ok(supplierService.getAllSuppliers());
         List<SupplierResponse> listAll = supplierService.getAllSuppliers();
