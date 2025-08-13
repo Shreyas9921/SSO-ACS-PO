@@ -28,11 +28,16 @@ public class TestController {
             "SSO Token received - Authenticated as: %s, AuthToken: %s, DeviceType: %s, AppVersion: %s",
             user.toString(), authToken, deviceType, appVersion
         );
+        String userContext = String.format(
+                "SSO User Auth DTO received - Authenticated as: %s, userName: %s, clientId: %s, AppVersion: %s",
+                user.toString(), user.getUserName(), user.getClientIds(), appVersion
+        );
 
         // Log the user info
-        logger.info(userInfo);
+        // logger.info(userInfo);
+        logger.info(userContext);
 
-        return ResponseEntity.ok(userInfo);
+        return ResponseEntity.ok(userContext);
     }
 
 //    TestLombok obj = new TestLombok();
