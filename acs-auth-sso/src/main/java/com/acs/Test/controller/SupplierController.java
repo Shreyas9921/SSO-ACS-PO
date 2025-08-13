@@ -41,13 +41,13 @@ public class SupplierController {
         SupplierResponse singleRecordById = supplierService.getSupplierById(id);
         // return ResponseEntity.ok(ApiResponse.ok(singleRecordById, "Individual supplier record"));
 
-        return ResponseEntity.ok(new ApiResponse<>(true, "Fetched supplier successfully", singleRecordById));
-        // System.out.println("Supplier response : " + singleRecordById.toString());
-
-        /*if (response == null) {
+        /*if (singleRecordById == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(ApiResponse.error("Supplier not found"));
         }*/
+        return ResponseEntity.ok(new ApiResponse<>(true, "Fetched supplier successfully", singleRecordById));
+        // System.out.println("Supplier response : " + singleRecordById.toString());
+
 
 //        return ResponseEntity.ok(response);
 //        return ResponseEntity.ok(singleRecordById);
@@ -57,13 +57,13 @@ public class SupplierController {
      * Get all suppliers list endpoint
      * */
 //    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<ApiResponse<List<SupplierResponse>>> getAll() {
     @GetMapping
-    public ResponseEntity<List<SupplierResponse>> getAll() {
+    public ResponseEntity<ApiResponse<List<SupplierResponse>>> getAll() {
+//    public ResponseEntity<List<SupplierResponse>> getAll() {
             // return ResponseEntity.ok(supplierService.getAllSuppliers());
         List<SupplierResponse> listAll = supplierService.getAllSuppliers();
 
-//        return ResponseEntity.ok(ApiResponse.ok(listAll, "All suppliers list"));
-        return ResponseEntity.ok(listAll);
+        return ResponseEntity.ok(new ApiResponse<>(true , "All suppliers list", listAll));
+//        return ResponseEntity.ok(listAll);
     }
 }

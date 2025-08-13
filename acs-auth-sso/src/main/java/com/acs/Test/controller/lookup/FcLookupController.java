@@ -1,5 +1,6 @@
 package com.acs.Test.controller.lookup;
 
+import com.acs.Test.controller.ApiResponse;
 import com.acs.Test.dto.lookup.FcLookupDTO;
 import com.acs.Test.dto.lookup.FcLookupFilterRequest;
 import com.acs.Test.dto.lookup.PoTypeLookupDTO;
@@ -31,8 +32,8 @@ public class FcLookupController {
             tags = {"PO Management"}
     )*/
     @PostMapping
-//    public ResponseEntity<ApiResponse<List<FcLookupDTO>>> getFcLookup(
-    public ResponseEntity<List<FcLookupDTO>> getFcLookup(
+    public ResponseEntity<ApiResponse<List<FcLookupDTO>>> getFcLookup(
+//    public ResponseEntity<List<FcLookupDTO>> getFcLookup(
             @Authenticated(required = true) UsersAuthDto user,
             @RequestHeader(name = Constant.AUTH_TOKEN) String authToken,
             @RequestHeader(name = Constant.DEVICE_TYPE) DeviceType deviceType,
@@ -63,8 +64,12 @@ public class FcLookupController {
                 ))
                 .collect(Collectors.toList());
 
-//        return ResponseEntity.ok(ApiResponse.ok(results));
-        return ResponseEntity.ok(results);
+        if (results.isEmpty()) {
+            return ResponseEntity.ok(new ApiResponse<>(false, "No fulfilment center found", results));
+        }
+
+        return ResponseEntity.ok(ApiResponse.ok(results));
+//        return ResponseEntity.ok(results);
     }
 
 

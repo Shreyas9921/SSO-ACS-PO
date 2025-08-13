@@ -44,8 +44,8 @@ public class PoTypeController {
 //            description = "Returns all PO types for Create PO dropdown",
 //            tags = {"PO Management"})
     @GetMapping
-    //    public ResponseEntity<ApiResponse<List<PoTypeLookupDTO>>> getPoTypes(
-    public ResponseEntity<List<PoTypeLookupDTO>> getPoTypes(
+    public ResponseEntity<ApiResponse<List<PoTypeLookupDTO>>> getPoTypes(
+//    public ResponseEntity<List<PoTypeLookupDTO>> getPoTypes(
             @Authenticated(required = true) UsersAuthDto user,
             @RequestHeader(name = Constant.AUTH_TOKEN) String authToken,
             @RequestHeader(name = Constant.DEVICE_TYPE) DeviceType deviceType,
@@ -54,7 +54,7 @@ public class PoTypeController {
                 .map(t -> new PoTypeLookupDTO(t.getId(), t.getPoType()))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(types);
-//        return ResponseEntity.ok(ApiResponse.ok(types));
+//        return ResponseEntity.ok().body(types);
+        return ResponseEntity.ok(ApiResponse.ok(types));
     }
 }

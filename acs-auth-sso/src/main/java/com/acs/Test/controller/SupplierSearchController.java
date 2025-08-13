@@ -28,7 +28,8 @@ public class SupplierSearchController {
      * */
     // Ambiguous mapping - IOC bean mapping illegalStateException -
     @PostMapping
-    public ResponseEntity <PageResult<SupplierResponse>> searchSuppliers(
+//    public ResponseEntity <PageResult<SupplierResponse>> searchSuppliers(
+    public ResponseEntity<ApiResponse<PageResult<SupplierResponse>>> searchSuppliers(
             @Authenticated(required = true) UsersAuthDto user,
             @RequestHeader(name = Constant.AUTH_TOKEN) String authToken,
             @RequestHeader(name = Constant.DEVICE_TYPE) DeviceType deviceType,
@@ -53,6 +54,7 @@ public class SupplierSearchController {
                 resultPage.getSize()
         );
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(new ApiResponse<>(true, "paged and filter response list", result));
+//        return ResponseEntity.ok(result);
     }
 }

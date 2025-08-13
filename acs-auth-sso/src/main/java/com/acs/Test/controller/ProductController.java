@@ -26,8 +26,8 @@ public class ProductController {
     }
 
     @PostMapping("/all-items")
-//    public ResponseEntity<ApiResponse<PageResult<ProductResponse>>> getPaginatedProducts(
-    public ResponseEntity<PageResult<ProductResponse>> getPaginatedProducts(
+    public ResponseEntity<ApiResponse<PageResult<ProductResponse>>> getPaginatedProducts(
+//    public ResponseEntity<PageResult<ProductResponse>> getPaginatedProducts(
             @Authenticated(required = true) UsersAuthDto user,
             @RequestHeader(name = Constant.AUTH_TOKEN) String authToken,
             @RequestHeader(name = Constant.DEVICE_TYPE) DeviceType deviceType,
@@ -52,8 +52,8 @@ public class ProductController {
                 paged.getSize()
         );
 
-//        return ResponseEntity.ok(ApiResponse.ok(result, "Paginated product list"));
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Paginated product list", result));
+//        return ResponseEntity.ok(result);
     }
 
 }

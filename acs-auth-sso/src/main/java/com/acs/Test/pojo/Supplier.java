@@ -72,11 +72,10 @@ public class Supplier {
     private Set<SupplierContact> contacts;
     //private Set<SupplierContact> contacts = new HashSet<>();
 
-//    @ToString.Exclude                // ← prevents recursive toString
-//    @EqualsAndHashCode.Exclude       // ← prevents recursive equals/hashCode
-
-//    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<SupplierProductMapping> supplierProductMappings;
+    @ToString.Exclude                // ← prevents recursive toString
+    @EqualsAndHashCode.Exclude       // ← prevents recursive equals/hashCode
+    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<SupplierProductMapping> supplierProductMappings;
 
     public Integer getId() {
         return id;
@@ -149,6 +148,10 @@ public class Supplier {
     public void setContacts(Set<SupplierContact> contacts) {
         this.contacts = contacts;
     }
+
+    public Set<SupplierProductMapping> getSupplierProductMappings() { return supplierProductMappings; }
+
+    public void setSupplierProductMappings(Set<SupplierProductMapping> supplierProductMappings) { this.supplierProductMappings = supplierProductMappings; }
 
     public boolean isIntegrationReceived() {
         return integrationReceived;

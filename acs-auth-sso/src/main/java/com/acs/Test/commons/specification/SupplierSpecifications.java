@@ -1,9 +1,7 @@
 package com.acs.Test.commons.specification;
 
 import com.acs.Test.dto.request.supplier.SupplierSearchRequest;
-import com.acs.Test.pojo.Supplier;
-import com.acs.Test.pojo.SupplierAddress;
-import com.acs.Test.pojo.SupplierContact;
+import com.acs.Test.pojo.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -17,13 +15,15 @@ public class SupplierSpecifications {
         return (root, query, cb) -> {
             query.distinct(true);
 
-            // Use reusable joins once - block removal - search field not applicable
+//             Use reusable joins once - block removal - search field not applicable
             Join<Supplier, SupplierAddress> addressJoin = root.joinSet("addresses", JoinType.LEFT);
             Join<Supplier, SupplierContact> contactJoin = root.joinSet("contacts", JoinType.LEFT);
 
-            // New joins for SKU/Product filtering
-            // Join<Supplier, SupplierProductMapping> mappingJoin = root.joinSet("supplierProductMappings", JoinType.LEFT);
-            //Join<SupplierProductMapping, Product> productJoin = mappingJoin.join("product", JoinType.LEFT);
+//            New joins for SKU/Product filtering
+/*
+            Join<Supplier, SupplierProductMapping> mappingJoin = root.joinSet("supplierProductMappings", JoinType.LEFT);
+            Join<SupplierProductMapping, Product> productJoin = mappingJoin.join("product", JoinType.LEFT);
+*/
 
             Predicate predicate = cb.conjunction();
 
@@ -84,27 +84,25 @@ public class SupplierSpecifications {
                                 "%" + request.getContactPhone().toLowerCase() + "%"));
             }
 
-            // Product filter would need join to a mapping entity which is not present yet
+//             Product filter would need join to a mapping entity which is not present yet
 
-            // Only join product mapping if SKU or productName is being filtered
-/*
-            if ((request.sku() != null && !request.sku().isEmpty()) ||
-                    (request.productName() != null && !request.productName().isEmpty())) {
+//             Only join product mapping if SKU or productName is being filtered
+            if ((request.getSku() != null && !request.getSku().isEmpty()) ||
+                    (request.getProductName() != null && !request.getProductName().isEmpty())) {
 
-                Join<Supplier, SupplierProductMapping> mappingJoin =root.joinSet("supplierProductMappings", JoinType.LEFT);
+                Join<Supplier, SupplierProductMapping> mappingJoin = root.joinSet("supplierProductMappings", JoinType.LEFT);
                 Join<SupplierProductMapping, Product> productJoin = mappingJoin.join("product", JoinType.LEFT);
 
-                if (request.sku() != null && !request.sku().isEmpty()) {
+                if (request.getSku() != null && !request.getSku().isEmpty()) {
                     predicate = cb.and(predicate,
-                            cb.like(cb.lower(productJoin.get("sku")), "%" + request.sku().toLowerCase() + "%"));
+                            cb.like(cb.lower(productJoin.get("sku")), "%" + request.getSku().toLowerCase() + "%"));
                 }
 
-                if (request.productName() != null && !request.productName().isEmpty()) {
+                if (request.getProductName() != null && !request.getProductName().isEmpty()) {
                     predicate = cb.and(predicate,
-                            cb.like(cb.lower(productJoin.get("productName")), "%" + request.productName().toLowerCase() + "%"));
+                            cb.like(cb.lower(productJoin.get("productName")), "%" + request.getProductName().toLowerCase() + "%"));
                 }
             }
-*/
 
             return predicate;
         };
