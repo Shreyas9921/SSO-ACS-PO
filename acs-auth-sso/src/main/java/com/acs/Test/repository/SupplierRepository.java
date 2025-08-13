@@ -4,6 +4,8 @@ import com.acs.Test.pojo.PoType;
 import com.acs.Test.pojo.Supplier;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +17,17 @@ import java.util.Optional;
 @Repository
 @Transactional/*(transactionManager = "poTransactionManager")*/
 public interface SupplierRepository extends JpaRepository<Supplier, Integer>, JpaSpecificationExecutor<Supplier> {
+
+    // Lookup query - list of active suppliers
+    // ✅ New AND-based code-name filter for active suppliers (replaces searchByActiveSuppliers)
+    @Query("SELECT s FROM Supplier s " +
+    "WHERE s.status = 'Active' " +
+            "AND (:code = '' OR LOWER(s.supplierCode) LIKE LOWER(CONCAT('%', :code, '%'))) " +
+      "AND (:name = '' OR LOWER(s.supplierName) LIKE LOWER(CONCAT('%', :name, '%')))")
+    List<Supplier> findBySupplierCodeOrNamePartial(@Param("code") String code, @Param("name") String name);
+
+    @Query("SELECT s FROM Supplier s WHERE s.status = 'Active'")
+    List<Supplier> findAllActiveSuppliers();
 }
 
 /*
