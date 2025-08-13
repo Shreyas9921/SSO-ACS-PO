@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "products")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Product {

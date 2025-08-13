@@ -19,9 +19,11 @@ import java.util.Set;
         @UniqueConstraint(columnNames = {"client_id", "supplier_name"}),
         @UniqueConstraint(columnNames = {"client_id", "supplier_code"})
 })
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Builder
 public class Supplier {
 
     @Id
@@ -76,6 +78,20 @@ public class Supplier {
     @EqualsAndHashCode.Exclude       // ← prevents recursive equals/hashCode
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SupplierProductMapping> supplierProductMappings;
+
+    /*public Supplier(Integer id, Client client, String supplierName, String supplierCode, String status, LocalDateTime createdAt, LocalDateTime updatedAt, boolean integrationReceived, Set<SupplierAddress> addresses, Set<SupplierContact> contacts, Set<SupplierProductMapping> supplierProductMappings) {
+        this.id = id;
+        this.client = client;
+        this.supplierName = supplierName;
+        this.supplierCode = supplierCode;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.integrationReceived = integrationReceived;
+        this.addresses = addresses;
+        this.contacts = contacts;
+        this.supplierProductMappings = supplierProductMappings;
+    }*/
 
     public Integer getId() {
         return id;

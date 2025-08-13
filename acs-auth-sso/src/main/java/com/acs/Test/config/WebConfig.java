@@ -26,6 +26,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -180,6 +181,11 @@ public class WebConfig extends AcceptHeaderLocaleResolver implements WebMvcConfi
 		String headerLang = request.getHeader(HttpHeaderNames.ACCEPT_LANGUAGE);
 		return headerLang == null || headerLang.isEmpty() ? Locale.getDefault()
 				: new Locale(Locale.lookupTag(Locale.LanguageRange.parse(headerLang), Arrays.asList(locales)));
+	}
+
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
 	}
 
 }
