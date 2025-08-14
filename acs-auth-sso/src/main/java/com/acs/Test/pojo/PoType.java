@@ -7,6 +7,8 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "po_types")
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class PoType {
 
@@ -16,14 +18,6 @@ public class PoType {
 
     @Column(name = "po_type", nullable = false, unique = true)
     private String poType;
-
-    public PoType() {}
-
-    public PoType(String poType, Integer id, Client client) {
-        this.poType = poType;
-        this.id = id;
-        this.client = client;
-    }
 
 /*
   @ManyToOne(fetch = FetchType.LAZY)

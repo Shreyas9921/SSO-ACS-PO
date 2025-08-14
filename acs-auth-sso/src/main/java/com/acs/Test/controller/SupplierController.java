@@ -1,6 +1,8 @@
 package com.acs.Test.controller;
 
+import com.acs.Test.dto.request.supplier.SupplierCreateRequest;
 import com.acs.Test.dto.response.supplier.SupplierResponse;
+import com.acs.Test.exception.BadRequestException;
 import com.acs.Test.service.SupplierService;
 import com.acs.common.annotation.Authenticated;
 import com.acs.common.dto.UsersAuthDto;
@@ -12,19 +14,47 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/suppliers")
 @Validated
 public class SupplierController {
-    /*
-     * Get data by id endpoint
-     * */
 
     private final SupplierService supplierService;
 
     public  SupplierController(SupplierService supplierService) { this.supplierService = supplierService; }
+
+    /*
+     * Create new supplier endpoint
+     * */
+    // Ambiguous mapping - IOC bean mapping illegalStateException -
+    /*
+     * New endpoint for filter & pagination api/suppliers/search
+     * */
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse<SupplierResponse>> create(
+            @Authenticated(required = true) UsersAuthDto user,
+            @RequestHeader(name = Constant.AUTH_TOKEN) String authToken,
+            @RequestHeader(name = Constant.DEVICE_TYPE) DeviceType deviceType,
+            @RequestHeader(name = Constant.APP_VERSION) String appVersion,
+            @Valid @RequestBody SupplierCreateRequest request) {
+
+        SupplierResponse created = supplierService.createSupplier(request, user);
+
+        if (created.isIntegrationReceived()) {
+            //  Success case
+            return ResponseEntity.ok(
+//                    ApiResponse.ok(created, "Supplier created successfully")
+                    new ApiResponse<>(true, "Supplier created successfully", created)
+            );
+        } else {
+            //  Failure case → throw BadRequestException
+            throw new BadRequestException("Supplier created successfully but not send to ACS ");
+        }
+
+    }
 
     /*
      * Get data by id endpoint

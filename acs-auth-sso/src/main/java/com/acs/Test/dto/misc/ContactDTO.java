@@ -1,12 +1,17 @@
 package com.acs.Test.dto.misc;
 
+import lombok.*;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-/*@Data
+@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@Builder*/
+@AllArgsConstructor
+@Builder
 public class ContactDTO {
     @NotBlank
     @Pattern(regexp = "^[A-Za-z\\s-]+$" ,message = "Name must contain only letters and spaces")
@@ -17,14 +22,14 @@ public class ContactDTO {
     private String phone;
     private Boolean isPrimary;
 
-    public ContactDTO(String name, String email, String phone, Boolean isPrimary) {
+    /*public ContactDTO(String name, String email, String phone, Boolean isPrimary) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.isPrimary = isPrimary;
-    }
+    }*/
 
-    public String getName() {
+    /*public String getName() {
         return name;
     }
 
@@ -54,9 +59,9 @@ public class ContactDTO {
 
     public void setPrimary(Boolean primary) {
         isPrimary = primary;
-    }
+    }*/
 
-    @Override
+    /*@Override
     public String toString() {
         return "ContactDTO{" +
                 "name='" + name + '\'' +
@@ -64,5 +69,5 @@ public class ContactDTO {
                 ", phone='" + phone + '\'' +
                 ", isPrimary=" + isPrimary +
                 '}';
-    }
+    }*/
 }

@@ -1,14 +1,18 @@
 package com.acs.Test.dto.misc;
 
-/*@Data
+import lombok.*;
+
+@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder*/
+@Builder
 public class FcResponse {
     private Integer fcId;
     private String fcName;
 
-    public FcResponse(Integer fcId, String fcName) {
+    /*public FcResponse(Integer fcId, String fcName) {
         this.fcId = fcId;
         this.fcName = fcName;
     }
@@ -35,5 +39,5 @@ public class FcResponse {
                 "fcId=" + fcId +
                 ", fcName='" + fcName + '\'' +
                 '}';
-    }
+    }*/
 }

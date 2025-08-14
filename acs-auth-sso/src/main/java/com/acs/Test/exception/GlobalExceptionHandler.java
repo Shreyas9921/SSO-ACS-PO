@@ -12,4 +12,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ApiError(ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiError> handleBadRequest(BadRequestException ex) {
+        return new ResponseEntity<>(new ApiError(ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DuplicateEntityException.class)
+    public ResponseEntity<ApiError> handleDuplicateEntity(DuplicateEntityException ex) {
+        return new ResponseEntity<>(new ApiError(ex.getMessage()), HttpStatus.CONFLICT);
+    }
+
 }

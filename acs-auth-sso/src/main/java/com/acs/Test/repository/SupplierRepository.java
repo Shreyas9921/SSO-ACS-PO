@@ -18,6 +18,9 @@ import java.util.Optional;
 @Transactional/*(transactionManager = "poTransactionManager")*/
 public interface SupplierRepository extends JpaRepository<Supplier, Integer>, JpaSpecificationExecutor<Supplier> {
 
+    Optional<Supplier> findBySupplierNameAndClientId(String supplierName, Integer clientId);
+    Optional<Supplier> findBySupplierCodeAndClientId(String supplierCode, Integer clientId);
+
     // Lookup query - list of active suppliers
     // ✅ New AND-based code-name filter for active suppliers (replaces searchByActiveSuppliers)
     @Query("SELECT s FROM Supplier s " +
