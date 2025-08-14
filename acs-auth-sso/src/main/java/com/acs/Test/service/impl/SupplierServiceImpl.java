@@ -2,9 +2,12 @@ package com.acs.Test.service.impl;
 
 import com.acs.Test.commons.mapper.SupplierMapper;
 import com.acs.Test.commons.specification.SupplierSpecifications;
+import com.acs.Test.commons.utils.JpaRepositoryUtil;
 import com.acs.Test.dto.acs.AcsCreateVendorRequest;
+import com.acs.Test.dto.acs.AcsUpdateVendorRequest;
 import com.acs.Test.dto.misc.FcResponse;
 import com.acs.Test.dto.request.supplier.SupplierCreateRequest;
+import com.acs.Test.dto.request.supplier.SupplierUpdateRequest;
 import com.acs.Test.dto.response.supplier.SupplierResponse;
 import com.acs.Test.dto.request.supplier.SupplierSearchRequest;
 import com.acs.Test.exception.BadRequestException;
@@ -35,6 +38,8 @@ import java.util.stream.Collectors;
 
 import static com.acs.Test.commons.constant.AppConstants.SUPPLIER;
 import static com.acs.Test.commons.helper.AcsRequestBuilder.buildAcsRequest;
+import static com.acs.Test.commons.helper.AcsRequestBuilder.buildAcsUpdateRequest;
+
 
 @Service
 //@Transactional(transactionManager = "poTransactionManager") // Use PO transaction manager
@@ -72,21 +77,6 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public SupplierResponse createSupplier(SupplierCreateRequest request, UsersAuthDto user) {
-//        Long clientId = userContext.getClientId();
-
-//        Client client = clientRepository.findById(clientId.intValue())
-//                .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
-
-        // Get the ACS clientId from the token (first entry) or throw
-
-//        String acsClientId = (user.getClientIds() != null && !user.getClientIds().isEmpty())
-//                ? user.getClientIds().get(0)
-//                : throw new BadRequestException("No clientId found in ACS token");
-
-//        // Lookup PO client record using accountId
-//        Client client = clientRepository.findByAccountId(acsClientId)
-//                .orElseThrow(() -> new ResourceNotFoundException("Client not found for accountId: "));
-
 
         // Multi-Client Lookup Version
         // 1️Validate and get clientIds from ACS token
@@ -110,11 +100,15 @@ public class SupplierServiceImpl implements SupplierService {
             .orElseThrow(() -> new ResourceNotFoundException(
                     "No matching client found for any ACS clientId: " + acsClientIds));
 
-        System.out.println("Client ID for client context: " +acsClientIds.stream().toArray());
+        // Single query to find the first client in DB matching ACS clientIds
+//        Client client = clientRepository.findFirstByAccountIdIn(acsClientIds)
+//                .orElseThrow(() -> new ResourceNotFoundException("No matching client found for any ACS clientId: " + acsClientIds));
+
+        System.out.println("Client ID for client context: " +acsClientIds.toString());
 
         // Validate ACS config
         if (client.getAccountId() == null || client.getAcsApiKey() == null) {
-            throw new BadRequestException("ACS Account ID or API Key is missing for this client");
+            throw new BadRequestException("ACS Account ID or API Key is missing for this client" + client.getClientCode());
         }
 
         // Validate cookie/session token
@@ -223,6 +217,7 @@ public class SupplierServiceImpl implements SupplierService {
         return supplierMapper.toResponse(saved, 0, List.of(), fcResponses);
     }
 
+
     @Override
     public SupplierResponse getSupplierById(Integer id) {
         Supplier supplier = supplierRepository.findById(id)
@@ -263,6 +258,153 @@ public class SupplierServiceImpl implements SupplierService {
                     return supplierMapper.toResponse(supplier, productCount, skus, fcResponses);
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public SupplierResponse updateSupplier(Integer id, SupplierUpdateRequest request, UsersAuthDto user) {
+
+        // Multi-Client Lookup Version
+        // 1️Validate and get clientIds from ACS token
+        /*List<String> acsClientIds = (user.getClientIds() != null && !user.getClientIds().isEmpty())
+            ? user.getClientIds()
+            : throw new BadRequestException("No clientIds found in ACS token");*/
+
+        List<String> acsClientIds; /*= List.of();*/
+
+        if(user.getClientIds() != null && !user.getClientIds().isEmpty())
+            acsClientIds = user.getClientIds();
+        else
+            throw new BadRequestException("No clientId found in ACS token");
+
+        // Lookup PO client record using accountId & Find the first matching client in the PO DB
+        /*Client client = acsClientIds.stream()
+                .map(clientRepository::findByAccountId)   // returns Optional<Client>
+                .filter(Optional::isPresent)              // keep only present
+                .map(Optional::get)                       // unwrap Client
+                .findFirst()                              // get the first match
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "No matching client found for any ACS clientId: " + acsClientIds));*/
+
+        // Single query to find the first client in DB matching ACS clientIds
+        Client client = clientRepository.findFirstByAccountIdIn(acsClientIds)
+                .orElseThrow(() -> new ResourceNotFoundException("No matching client found for any ACS clientId: " + acsClientIds));
+
+        System.out.println("Client ID for client context: " +acsClientIds.toString());
+
+        // Validate ACS config
+        if (client.getAccountId() == null || client.getAcsApiKey() == null) {
+            throw new BadRequestException("ACS Account ID or API Key is missing for this client");
+        }
+
+        // Validate cookie/session token
+        String cookieValue = client.getCookie();
+        clientRepository.findByCookie(cookieValue)
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid session token"));
+
+        Supplier existing = supplierRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier not found"));
+
+        // Deep copy for audit
+        Supplier oldSupplier = new Supplier(existing);
+
+        // Supplier code should not be changed
+        if (!existing.getSupplierCode().equals(request.getSupplierCode())) {
+            throw new BadRequestException("Cannot update supplier code once initialized.");
+        }
+
+        // Duplicate name check
+        supplierRepository.findBySupplierNameAndClientId(request.getSupplierName(), existing.getClient().getId())
+                .filter(s -> !s.getId().equals(id))
+                .ifPresent(s -> { throw new DuplicateEntityException("Supplier name already exists"); });
+
+        // Map incoming fields to entity
+        supplierMapper.updateEntity(existing, request);
+
+        // Save supplier
+        Supplier saved = supplierRepository.save(existing);
+
+        // Update FC mappings if request.fcIds() is not null
+        if (request.getFcIds() != null) {
+            List<SupplierFcMappings> existingMappings = supplierFcMappingRepository.findBySupplierId(saved.getId());
+            // supplierFcMappingRepository.deleteAllInBatch(existingMappings);
+            supplierFcMappingRepository.deleteInBatch(existingMappings);
+
+            // JPA Repository batch delete utility method - Optional else deleteInBatch(Iterable<T> entity)
+            // JpaRepositoryUtil.deleteBatch(supplierFcMappingRepository, existingMappings);
+
+            List<FulfilmentCenter> fcEntities = fulfilmentCenterRepository.findAllById(request.getFcIds());
+
+            List<SupplierFcMappings> newMappings = fcEntities.stream()
+                    .map(fc -> SupplierFcMappings.builder()
+                            .supplier(saved)
+                            .fulfilmentCenter(fc)
+                            .status(true)
+                            .build())
+                    .collect(Collectors.toList());
+
+            supplierFcMappingRepository.saveAll(newMappings);
+        }
+
+        // ✅ Map FCs to warehouseLocationName
+        List<String> fcNames = supplierFcMappingRepository.findBySupplierId(existing.getId())
+                .stream()
+                .map(m -> m.getFulfilmentCenter().getFcName())
+                .collect(Collectors.toList());
+
+        // request.setWarehouseLocationName(fcNames);
+
+        //  Sync with ACS
+        try {
+            client = existing.getClient();
+
+            // Log headers and basic info
+//      System.out.println(
+//        "ACS Request Headers: AccountId=" + client.getAccountId() +
+//          ", ApiKey=" + (client.getAcsApiKey() != null ? client.getAcsApiKey().substring(0, 4) + "****" : "null") +
+//          ", DEVICE-TYPE=" + acsService.getDeviceType() +
+//          ", VER=" + acsService.getVersion()
+//      );
+
+            AcsUpdateVendorRequest acsRequest = buildAcsUpdateRequest(saved, fcNames);
+            //AcsCreateVendorRequest acsRequest = buildAcsRequest(saved);
+
+            // Optional: Log request body too
+//      System.out.println("Sending ACS Request Body: {}"+ new ObjectMapper().writeValueAsString(acsRequest));
+
+            boolean isSuccess = acsService.updateVendor(acsRequest, client.getAccountId(), client.getAcsApiKey(), client.getCookie());
+
+            if (isSuccess) {
+                saved.setIntegrationReceived(true);
+                supplierRepository.save(saved); // Save updated sync status
+            }
+
+        } catch (Exception e) {
+            System.out.println("Failed to sync supplier to ACS: {}"+ e.getMessage() + e);
+        }
+
+        // Audit log
+        /*auditLogService.log(
+                "UPDATE",
+                SUPPLIER,
+                saved.getId().toString(),
+                oldSupplier,
+                saved,
+                userContext.getUserId(),
+                userContext.getUsername(),
+                SUPPLIER
+        );*/
+
+        // Fetch data
+        Integer productCount = supplierProductMappingRepository.countBySupplierId(saved.getId());
+        List<String> skus = supplierProductMappingRepository.findProductsBySupplierId(saved.getId());
+
+        List<SupplierFcMappings> fcMappings = supplierFcMappingRepository.findBySupplierId(saved.getId());
+        List<FcResponse> fcResponses = fcMappings.stream()
+                .filter(SupplierFcMappings::getStatus)
+                .map(mapping -> supplierMapper.toFcResponse(mapping.getFulfilmentCenter()))
+                .collect(Collectors.toList());
+
+        return supplierMapper.toResponse(saved, productCount, skus, fcResponses);
     }
 
 

@@ -1,7 +1,16 @@
 package com.acs.Test.dto.acs;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AcsCreateVendorRequest {
 
     private String addressLine1;
@@ -19,10 +28,10 @@ public class AcsCreateVendorRequest {
     private String vendorType = "Supplier";
     private boolean emailNotificationEnable = false;
 
-    public AcsCreateVendorRequest() {
-    }
+    /*public AcsCreateVendorRequest() {
+    }*/
 
-    public AcsCreateVendorRequest(String addressLine1, String addressLine2, String businessPhone, String city, String country, String clientId, String postalCode, String state, String email, String vendorName, String vendorCode, List<String> warehouseLocationName, String vendorType, boolean emailNotificationEnable) {
+    /*public AcsCreateVendorRequest(String addressLine1, String addressLine2, String businessPhone, String city, String country, String clientId, String postalCode, String state, String email, String vendorName, String vendorCode, List<String> warehouseLocationName, String vendorType, boolean emailNotificationEnable) {
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
         this.businessPhone = businessPhone;
@@ -37,9 +46,9 @@ public class AcsCreateVendorRequest {
         this.warehouseLocationName = warehouseLocationName;
         this.vendorType = vendorType;
         this.emailNotificationEnable = emailNotificationEnable;
-    }
+    }*/
 
-    public String getAddressLine1() {
+    /*public String getAddressLine1() {
         return addressLine1;
     }
 
@@ -149,5 +158,5 @@ public class AcsCreateVendorRequest {
 
     public void setEmailNotificationEnable(boolean emailNotificationEnable) {
         this.emailNotificationEnable = emailNotificationEnable;
-    }
+    }*/
 }

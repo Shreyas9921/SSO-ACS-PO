@@ -1,6 +1,7 @@
 package com.acs.Test.controller;
 
 import com.acs.Test.dto.request.supplier.SupplierCreateRequest;
+import com.acs.Test.dto.request.supplier.SupplierUpdateRequest;
 import com.acs.Test.dto.response.supplier.SupplierResponse;
 import com.acs.Test.exception.BadRequestException;
 import com.acs.Test.service.SupplierService;
@@ -8,6 +9,7 @@ import com.acs.common.annotation.Authenticated;
 import com.acs.common.dto.UsersAuthDto;
 import com.acs.common.enums.DeviceType;
 import com.acs.common.utils.Constant;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +21,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/suppliers")
+@RequiredArgsConstructor
 @Validated
 public class SupplierController {
 
     private final SupplierService supplierService;
 
-    public  SupplierController(SupplierService supplierService) { this.supplierService = supplierService; }
+//    public  SupplierController(SupplierService supplierService) { this.supplierService = supplierService; }
 
     /*
      * Create new supplier endpoint
@@ -51,7 +54,7 @@ public class SupplierController {
             );
         } else {
             //  Failure case → throw BadRequestException
-            throw new BadRequestException("Supplier created successfully but not send to ACS ");
+            throw new BadRequestException("Supplier created successfully but not sent to ACS ");
         }
 
     }
@@ -96,4 +99,30 @@ public class SupplierController {
         return ResponseEntity.ok(new ApiResponse<>(true , "All suppliers list", listAll));
 //        return ResponseEntity.ok(listAll);
     }
+
+    /*
+     * Update supplier information endpoint
+     * */
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<SupplierResponse>> update(
+            @Authenticated(required = true) UsersAuthDto user,
+            @RequestHeader(name = Constant.AUTH_TOKEN) String authToken,
+            @RequestHeader(name = Constant.DEVICE_TYPE) DeviceType deviceType,
+            @RequestHeader(name = Constant.APP_VERSION) String appVersion,
+            @PathVariable Integer id,
+            @Valid @RequestBody SupplierUpdateRequest request) {
+        SupplierResponse updated = supplierService.updateSupplier(id, request, user);
+        // return ResponseEntity.ok(updated);
+        if (updated.isIntegrationReceived()) {
+            //  Success case
+            return ResponseEntity.ok(
+                    ApiResponse.ok(updated, "Supplier updated successfully ")
+            );
+        } else {
+            //  Failure case → throw BadRequestException
+            throw new BadRequestException("Supplier updated successfully but not sent to ACS ");
+        }
+
+    }
+
 }
