@@ -13,12 +13,15 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.acs.Test.commons.constant.AppConstants.SUPPLIER_STATUS_ACTIVE;
+
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 @Table(name = "suppliers", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"client_id", "supplier_name"}),
         @UniqueConstraint(columnNames = {"client_id", "supplier_code"})
 })
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(onlyExplicitlyIncluded = true)
@@ -49,7 +52,7 @@ public class Supplier {
 
     // private String status = SUPPLIER_STATUS_ACTIVE;
     @Column(name = "status")
-    private String status = "Active";
+    private String status = SUPPLIER_STATUS_ACTIVE;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -79,101 +82,42 @@ public class Supplier {
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SupplierProductMapping> supplierProductMappings;
 
-    /*public Supplier(Integer id, Client client, String supplierName, String supplierCode, String status, LocalDateTime createdAt, LocalDateTime updatedAt, boolean integrationReceived, Set<SupplierAddress> addresses, Set<SupplierContact> contacts, Set<SupplierProductMapping> supplierProductMappings) {
-        this.id = id;
-        this.client = client;
-        this.supplierName = supplierName;
-        this.supplierCode = supplierCode;
-        this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.integrationReceived = integrationReceived;
-        this.addresses = addresses;
-        this.contacts = contacts;
-        this.supplierProductMappings = supplierProductMappings;
-    }*/
+    @Transient
+    @JsonIgnore
+    @Getter @Setter
+    private String originalState;
 
-    public Integer getId() {
-        return id;
+    @Transient
+    @JsonIgnore
+    private static final ObjectMapper mapper = new ObjectMapper();
+
+    @PostLoad
+    private void cacheOriginalState() {
+        try {
+            this.originalState = mapper.writeValueAsString(this);
+        } catch (Exception e) {
+            this.originalState = null;
+        }
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    // Copy Constructor
+    public Supplier(Supplier other) {
+        // If 'id' should be copied for a specific use case (e.g., cloning for
+        // a detached, non-persisted object), then copy it.
+        this.id = other.id;
+        this.client = other.client; // If you want a deep copy, clone client as well
+        this.supplierName = other.supplierName;
+        this.supplierCode = other.supplierCode;
+        this.status = other.status;
+        this.createdAt = other.createdAt;
+        this.updatedAt = other.updatedAt;
+
+        // Shallow copy of addresses, contacts, and supplierProductMappings
+        this.addresses = (other.addresses != null) ? new HashSet<>(other.addresses) : null;
+        this.contacts = (other.contacts != null) ? new HashSet<>(other.contacts) : null;
+        this.supplierProductMappings = (other.supplierProductMappings != null) ? new HashSet<>(other.supplierProductMappings) : null;
+
+        this.originalState = other.originalState;
     }
 
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    public String getSupplierName() {
-        return supplierName;
-    }
-
-    public void setSupplierName(String supplierName) {
-        this.supplierName = supplierName;
-    }
-
-    public String getSupplierCode() {
-        return supplierCode;
-    }
-
-    public void setSupplierCode(String supplierCode) {
-        this.supplierCode = supplierCode;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Set<SupplierAddress> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(Set<SupplierAddress> addresses) {
-        this.addresses = addresses;
-    }
-
-    public Set<SupplierContact> getContacts() {
-        return contacts;
-    }
-
-    public void setContacts(Set<SupplierContact> contacts) {
-        this.contacts = contacts;
-    }
-
-    public Set<SupplierProductMapping> getSupplierProductMappings() { return supplierProductMappings; }
-
-    public void setSupplierProductMappings(Set<SupplierProductMapping> supplierProductMappings) { this.supplierProductMappings = supplierProductMappings; }
-
-    public boolean isIntegrationReceived() {
-        return integrationReceived;
-    }
-
-    public void setIntegrationReceived(boolean integrationReceived) {
-        this.integrationReceived = integrationReceived;
-    }
 }

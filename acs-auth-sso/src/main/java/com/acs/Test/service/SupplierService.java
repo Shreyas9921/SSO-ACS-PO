@@ -1,6 +1,7 @@
 package com.acs.Test.service;
 
 import com.acs.Test.dto.request.supplier.SupplierCreateRequest;
+import com.acs.Test.dto.request.supplier.SupplierUpdateRequest;
 import com.acs.Test.dto.response.supplier.SupplierResponse;
 import com.acs.Test.dto.request.supplier.SupplierSearchRequest;
 import com.acs.common.dto.UsersAuthDto;
@@ -20,4 +21,7 @@ public interface SupplierService {
     Page<SupplierResponse> searchSuppliers(SupplierSearchRequest filters, int page, int size, String sortField);
 
     List<SupplierResponse> getAllSuppliers();
+
+    SupplierResponse updateSupplier(Integer id, SupplierUpdateRequest request, UsersAuthDto user);
+
 }

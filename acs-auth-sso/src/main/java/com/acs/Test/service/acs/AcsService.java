@@ -1,7 +1,10 @@
 package com.acs.Test.service.acs;
 
 import com.acs.Test.dto.acs.AcsCreateVendorRequest;
+import com.acs.Test.dto.acs.AcsUpdateVendorRequest;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -13,6 +16,8 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Getter
+@Setter
 public class AcsService {
 
     private final RestTemplate restTemplate;
@@ -67,7 +72,7 @@ public class AcsService {
         }
     }
 
-    /*public boolean updateVendor(AcsUpdateVendorRequest request, String accountId, String apiKey, String cookie) {
+    public boolean updateVendor(AcsUpdateVendorRequest request, String accountId, String apiKey, String cookie) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -92,7 +97,7 @@ public class AcsService {
             log.error("Error updating vendor in ACS: {}", e.getMessage(), e);
             return false;
         }
-    }*/
+    }
 
     /*public AcsService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -106,7 +111,7 @@ public class AcsService {
         this.version = version;
     }*/
 
-    public RestTemplate getRestTemplate() {
+    /*public RestTemplate getRestTemplate() {
         return restTemplate;
     }
 
@@ -140,6 +145,6 @@ public class AcsService {
 
     public void setVersion(String version) {
         this.version = version;
-    }
+    }*/
 }
 

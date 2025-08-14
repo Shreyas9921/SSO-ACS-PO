@@ -5,6 +5,7 @@ import com.acs.Test.dto.misc.AddressDTO;
 import com.acs.Test.dto.misc.ContactDTO;
 import com.acs.Test.dto.misc.FcResponse;
 import com.acs.Test.dto.request.supplier.SupplierCreateRequest;
+import com.acs.Test.dto.request.supplier.SupplierUpdateRequest;
 import com.acs.Test.dto.response.supplier.SupplierResponse;
 import com.acs.Test.pojo.*;
 import lombok.Data;
@@ -121,6 +122,51 @@ public class SupplierMapper {
                 fc.getId(),
                 fc.getFcName()
         );
+    }
+
+    public void updateEntity(Supplier existing, SupplierUpdateRequest req) {
+        existing.setSupplierName(req.getSupplierName());
+        existing.setSupplierCode(req.getSupplierCode());
+        existing.setStatus(req.getStatus());
+
+        // Update addresses
+        existing.getAddresses().clear();
+        Set<SupplierAddress> addressEntities = new HashSet<>();
+
+        if (req.getAddresses() != null) {
+            for (AddressDTO dto : req.getAddresses()) {
+                SupplierAddress addr = toAddressEntity(dto, existing);
+                addressEntities.add(addr);
+            }
+
+            Optional<SupplierAddress> primary = addressEntities.stream()
+                    .filter(a -> Boolean.TRUE.equals(a.getDefault()))
+                    .findFirst();
+
+            boolean hasBilling = addressEntities.stream()
+                    .anyMatch(a -> AppConstants.ADDRESS_TYPE_BILLING.equalsIgnoreCase(a.getAddressTypeCode()));
+            boolean hasShipping = addressEntities.stream()
+                    .anyMatch(a -> AppConstants.ADDRESS_TYPE_SHIPPING.equalsIgnoreCase(a.getAddressTypeCode()));
+
+            if (Boolean.TRUE.equals(req.getCopyPrimaryToBilling()) && primary.isPresent() && !hasBilling) {
+                addressEntities.add(cloneAddress(primary.get(), AppConstants.ADDRESS_TYPE_BILLING, existing));
+            }
+
+            if (Boolean.TRUE.equals(req.getCopyPrimaryToShipping()) && primary.isPresent() && !hasShipping) {
+                addressEntities.add(cloneAddress(primary.get(), AppConstants.ADDRESS_TYPE_SHIPPING, existing));
+            }
+
+            existing.getAddresses().addAll(addressEntities);
+        }
+
+        // Update contacts
+        existing.getContacts().clear();
+        if (req.getContacts() != null) {
+            req.getContacts().forEach(dto -> {
+                SupplierContact c = toContactEntity(dto, existing);
+                existing.getContacts().add(c);
+            });
+        }
     }
 
     private SupplierAddress cloneAddress(SupplierAddress original, String type, Supplier supplier) {

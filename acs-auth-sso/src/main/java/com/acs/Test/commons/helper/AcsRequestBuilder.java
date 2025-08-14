@@ -1,6 +1,7 @@
 package com.acs.Test.commons.helper;
 
 import com.acs.Test.dto.acs.AcsCreateVendorRequest;
+import com.acs.Test.dto.acs.AcsUpdateVendorRequest;
 import com.acs.Test.exception.BadRequestException;
 import com.acs.Test.pojo.*;
 import com.acs.Test.repository.SupplierFcMappingRepository;
@@ -52,14 +53,15 @@ public class AcsRequestBuilder {
         return request;
     }
 
-    /*private AcsUpdateVendorRequest buildAcsUpdateRequest(Supplier supplier) {
+    public static AcsUpdateVendorRequest buildAcsUpdateRequest(Supplier supplier, List<String> fcNames) {
         AcsUpdateVendorRequest request = new AcsUpdateVendorRequest();
         request.setVendorName(supplier.getSupplierName());
         request.setVendorCode(supplier.getSupplierCode());
         request.setClientId(String.valueOf(supplier.getClient().getAccountId()));
 
+        // Set default address
         supplier.getAddresses().stream()
-                .filter(SupplierAddress::getIsDefault)
+                .filter(SupplierAddress::getDefault)
                 .findFirst()
                 .ifPresent(addr -> {
                     request.setAddressLine1(addr.getAddressLine1());
@@ -70,24 +72,20 @@ public class AcsRequestBuilder {
                     request.setPostalCode(addr.getZipCode());
                 });
 
+        // Set primary contact
         supplier.getContacts().stream()
-                .filter(SupplierContact::getIsPrimary)
+                .filter(SupplierContact::getPrimary)
                 .findFirst()
                 .ifPresent(contact -> {
                     request.setEmail(contact.getEmail());
                     request.setBusinessPhone(contact.getPhone());
                 });
 
-        List<String> fcNames = supplierFcMappingRepository.findBySupplierId(supplier.getId())
-                .stream()
-                .map(m -> m.getFulfilmentCenter().getFcName())
-                .toList();
-
         request.setWarehouseLocationName(fcNames);
         request.setVendorType("Supplier");
         request.setEmailNotificationEnable(false);
 
         return request;
-    }*/
+    }
 
 }
