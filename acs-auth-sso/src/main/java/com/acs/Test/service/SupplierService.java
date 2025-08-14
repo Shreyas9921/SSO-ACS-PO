@@ -22,6 +22,19 @@ public interface SupplierService {
 
     List<SupplierResponse> getAllSuppliers();
 
+    void deleteSupplier(Integer id);
+
     SupplierResponse updateSupplier(Integer id, SupplierUpdateRequest request, UsersAuthDto user);
+
+    /*
+     * Status toggle method contract
+     * */
+    void toggleStatus(Integer id);
+
+    /*
+    * State and Country lookups
+    * */
+    List<String> getDistinctCountries();
+    List<String> getStatesForCountries(List<String> countries);
 
 }

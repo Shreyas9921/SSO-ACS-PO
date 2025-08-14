@@ -21,6 +21,9 @@ public interface SupplierRepository extends JpaRepository<Supplier, Integer>, Jp
     Optional<Supplier> findBySupplierNameAndClientId(String supplierName, Integer clientId);
     Optional<Supplier> findBySupplierCodeAndClientId(String supplierCode, Integer clientId);
 
+    Optional<Supplier> findBySupplierName(String supplierName);
+    Optional<Supplier> findBySupplierCode(String supplierCode);
+
     // Lookup query - list of active suppliers
     // ✅ New AND-based code-name filter for active suppliers (replaces searchByActiveSuppliers)
     @Query("SELECT s FROM Supplier s " +
@@ -31,6 +34,13 @@ public interface SupplierRepository extends JpaRepository<Supplier, Integer>, Jp
 
     @Query("SELECT s FROM Supplier s WHERE s.status = 'Active'")
     List<Supplier> findAllActiveSuppliers();
+
+    @Query("SELECT DISTINCT sa.country FROM SupplierAddress sa WHERE sa.country IS NOT NULL")
+    List<String> findDistinctCountries();
+
+    @Query("SELECT DISTINCT sa.state FROM SupplierAddress sa WHERE sa.country IN :countries AND sa.state IS NOT NULL")
+    List<String> findDistinctStatesByCountries(@Param("countries") List<String> countries);
+
 }
 
 /*

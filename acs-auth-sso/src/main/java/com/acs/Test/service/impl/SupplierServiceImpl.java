@@ -1,5 +1,6 @@
 package com.acs.Test.service.impl;
 
+import com.acs.Test.commons.constant.AppConstants;
 import com.acs.Test.commons.mapper.SupplierMapper;
 import com.acs.Test.commons.specification.SupplierSpecifications;
 import com.acs.Test.commons.utils.JpaRepositoryUtil;
@@ -447,6 +448,69 @@ public class SupplierServiceImpl implements SupplierService {
 
             return supplierMapper.toResponse(supplier, productCount, skus, fcResponses);
         });
+    }
+
+    @Override
+    public void toggleStatus(Integer id) {
+        Supplier supplier = supplierRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier not found"));
+
+        // Capture old state for audit
+        java.util.Map<String, Object> oldMap = new java.util.HashMap<>();
+        oldMap.put("id", supplier.getId());
+        oldMap.put("status", supplier.getStatus());
+
+        boolean newStatus = supplier.getStatus().equals(AppConstants.SUPPLIER_STATUS_ACTIVE) ? false : true;
+
+        supplier.setStatus(newStatus ? AppConstants.SUPPLIER_STATUS_ACTIVE : AppConstants.SUPPLIER_STATUS_INACTIVE);
+        Supplier updated = supplierRepository.save(supplier);
+
+        // Capture new state for audit
+        java.util.Map<String, Object> newMap = new java.util.HashMap<>();
+        newMap.put("id", updated.getId());
+        newMap.put("status", updated.getStatus());
+
+        // Audit log
+        /*auditLogService.log(
+                "UPDATE",
+                SUPPLIER,
+                updated.getId().toString(),
+                oldMap,
+                newMap,
+                userContext.getUserId(),
+                userContext.getUsername(),
+                SUPPLIER
+        );*/
+    }
+
+    @Override
+    public void deleteSupplier(Integer id) {
+        Supplier supplier = supplierRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier not found"));
+
+        // Audit log
+        /*auditLogService.log(
+                "DELETE",
+                SUPPLIER,
+                supplier.getId().toString(),
+                supplier,
+                null,
+                userContext.getUserId(),
+                userContext.getUsername(),
+                SUPPLIER
+        );*/
+
+        supplierRepository.delete(supplier);
+    }
+
+    @Override
+    public List<String> getDistinctCountries () {
+        return supplierRepository.findDistinctCountries();
+    }
+
+    @Override
+    public List<String> getStatesForCountries(List<String> countries) {
+        return supplierRepository.findDistinctStatesByCountries(countries);
     }
 
 }

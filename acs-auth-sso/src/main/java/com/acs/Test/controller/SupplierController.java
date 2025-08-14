@@ -1,5 +1,6 @@
 package com.acs.Test.controller;
 
+import com.acs.Test.dto.misc.StateRequest;
 import com.acs.Test.dto.request.supplier.SupplierCreateRequest;
 import com.acs.Test.dto.request.supplier.SupplierUpdateRequest;
 import com.acs.Test.dto.response.supplier.SupplierResponse;
@@ -125,4 +126,53 @@ public class SupplierController {
 
     }
 
+    /*
+     * Status toggle endpoint
+     * */
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> toggleStatus(
+            @Authenticated(required = true) UsersAuthDto user,
+            @RequestHeader(name = Constant.AUTH_TOKEN) String authToken,
+            @RequestHeader(name = Constant.DEVICE_TYPE) DeviceType deviceType,
+            @RequestHeader(name = Constant.APP_VERSION) String appVersion,
+            @PathVariable Integer id) {
+        supplierService.toggleStatus(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    /*
+     * delete supplier by id endpoint
+     * */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(
+            @Authenticated(required = true) UsersAuthDto user,
+            @RequestHeader(name = Constant.AUTH_TOKEN) String authToken,
+            @RequestHeader(name = Constant.DEVICE_TYPE) DeviceType deviceType,
+            @RequestHeader(name = Constant.APP_VERSION) String appVersion,
+            @PathVariable Integer id) {
+        supplierService.deleteSupplier(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/countries")
+    public ResponseEntity<ApiResponse<List<String>>> getDistinctCountries(
+            @Authenticated(required = true) UsersAuthDto user,
+            @RequestHeader(name = Constant.AUTH_TOKEN) String authToken,
+            @RequestHeader(name = Constant.DEVICE_TYPE) DeviceType deviceType,
+            @RequestHeader(name = Constant.APP_VERSION) String appVersion
+            ) {
+        List<String> countries = supplierService.getDistinctCountries();
+        return ResponseEntity.ok(ApiResponse.ok(countries, "Unique countries fetched successfully"));
+    }
+
+    @PostMapping("/states")
+    public ResponseEntity<ApiResponse<List<String>>> getStatesByCountries(
+            @Authenticated(required = true) UsersAuthDto user,
+            @RequestHeader(name = Constant.AUTH_TOKEN) String authToken,
+            @RequestHeader(name = Constant.DEVICE_TYPE) DeviceType deviceType,
+            @RequestHeader(name = Constant.APP_VERSION) String appVersion,
+            @RequestBody StateRequest request) {
+        List<String> states = supplierService.getStatesForCountries(request.getCountries());
+        return ResponseEntity.ok(ApiResponse.ok(states, "States fetched successfully"));
+    }
 }
